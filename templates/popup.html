@@ -34,25 +34,39 @@
         }
         
         .roxli-accounts-list {
-            border-radius: 8px;
-            border: 1px solid #e8eaed;
+            max-height: 280px;
+            overflow-y: auto;
+            border-radius: 12px;
             background: #fff;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin: 8px 0;
+        }
+        
+        .roxli-accounts-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .roxli-accounts-list::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        .roxli-accounts-list::-webkit-scrollbar-thumb {
+            background: #dadce0;
+            border-radius: 2px;
         }
         
         .roxli-account-item {
             display: flex;
             align-items: center;
-            padding: 16px 20px;
+            padding: 12px 16px;
             border-bottom: 1px solid #f1f3f4;
-            transition: all 0.2s ease;
+            transition: all 0.15s ease;
             cursor: pointer;
+            min-height: 64px;
         }
         
         .roxli-account-item:hover {
-            background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
-            border-left: 3px solid #1a73e8;
-            padding-left: 17px;
+            background: #f8f9fa;
+            transform: translateX(2px);
         }
         
         .roxli-account-item:last-child {
@@ -63,56 +77,57 @@
             display: flex;
             align-items: center;
             flex: 1;
+            min-width: 0;
         }
         
         .roxli-account-avatar {
-            width: 48px;
-            height: 48px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             object-fit: cover;
-            border: 2px solid #e8eaed;
-            margin-right: 16px;
-            transition: all 0.2s ease;
-        }
-        
-        .roxli-account-item:hover .roxli-account-avatar {
-            border-color: #1a73e8;
-            box-shadow: 0 2px 8px rgba(26, 115, 232, 0.2);
+            margin-right: 12px;
+            flex-shrink: 0;
         }
         
         .roxli-account-info {
             flex: 1;
+            min-width: 0;
         }
         
         .roxli-account-name {
-            font-weight: 600;
-            font-size: 15px;
+            font-weight: 500;
+            font-size: 14px;
             color: #202124;
-            margin-bottom: 4px;
-            line-height: 1.2;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         
         .roxli-account-email {
-            font-size: 13px;
+            font-size: 12px;
             color: #5f6368;
-            line-height: 1.2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         
         .roxli-remove-account {
             background: none;
             border: none;
             color: #9aa0a6;
-            font-size: 20px;
+            font-size: 16px;
             cursor: pointer;
-            padding: 8px;
+            padding: 4px;
             border-radius: 50%;
-            width: 32px;
-            height: 32px;
+            width: 24px;
+            height: 24px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s ease;
-            opacity: 0;
+            transition: all 0.15s ease;
+            opacity: 0.7;
+            flex-shrink: 0;
         }
         
         .roxli-account-item:hover .roxli-remove-account {
@@ -122,7 +137,6 @@
         .roxli-remove-account:hover {
             background-color: #fce8e6;
             color: #ea4335;
-            transform: scale(1.1);
         }
     </style>
 </head>
@@ -282,11 +296,14 @@
                 return;
             }
             
-            // Set dynamic height based on number of accounts - show up to 6 accounts
-            const maxVisibleAccounts = Math.min(savedAccounts.length, 6);
-            accountsList.style.maxHeight = `${maxVisibleAccounts * 70}px`;
-            accountsList.style.overflowY = savedAccounts.length > 6 ? 'auto' : 'visible';
-            accountsList.style.scrollbarWidth = 'thin';
+            // Dynamic height handling for better display
+            if (savedAccounts.length <= 4) {
+                accountsList.style.maxHeight = 'none';
+                accountsList.style.overflowY = 'visible';
+            } else {
+                accountsList.style.maxHeight = '280px';
+                accountsList.style.overflowY = 'auto';
+            }
             
             savedAccounts.forEach((account, index) => {
                 const accountDiv = document.createElement('div');
