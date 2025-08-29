@@ -32,98 +32,6 @@
             border: 1px solid #e0e0e0;
             display: none;
         }
-        
-        .roxli-accounts-list {
-            max-height: 400px;
-            overflow-y: auto;
-        }
-        
-        .roxli-account-item {
-            display: flex;
-            align-items: center;
-            padding: 12px 16px;
-            border-bottom: 1px solid #f0f0f0;
-            transition: background-color 0.2s ease;
-        }
-        
-        .roxli-account-item:hover {
-            background-color: #f8f9fa;
-        }
-        
-        .roxli-account-item:last-child {
-            border-bottom: none;
-        }
-        
-        .account-content {
-            display: flex;
-            align-items: center;
-            flex: 1;
-            cursor: pointer;
-        }
-        
-        .account-avatar-wrapper {
-            position: relative;
-            width: 40px;
-            height: 40px;
-            margin-right: 12px;
-        }
-        
-        .roxli-account-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-        
-        .roxli-account-initials {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 16px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-        }
-        
-        .roxli-account-info {
-            flex: 1;
-        }
-        
-        .roxli-account-name {
-            font-weight: 500;
-            font-size: 14px;
-            color: #202124;
-            margin-bottom: 2px;
-        }
-        
-        .roxli-account-email {
-            font-size: 12px;
-            color: #5f6368;
-        }
-        
-        .roxli-remove-account {
-            background: none;
-            border: none;
-            color: #5f6368;
-            font-size: 18px;
-            cursor: pointer;
-            padding: 4px;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
-        }
-        
-        .roxli-remove-account:hover {
-            background-color: #f1f3f4;
-            color: #ea4335;
-        }
     </style>
 </head>
 <body class="popup-body-roxli">
@@ -291,30 +199,12 @@
             savedAccounts.forEach((account, index) => {
                 const accountDiv = document.createElement('div');
                 accountDiv.className = 'roxli-account-item';
-                
-                const hasAvatar = account.avatar && !account.avatar.includes('data:image/svg+xml');
-                const avatarUrl = hasAvatar ? account.avatar : `https://ui-avatars.com/api/?name=${account.firstName}+${account.lastName}&background=667eea&color=fff&size=40&bold=true`;
+                // Generate consistent avatar
+                const avatarUrl = account.avatar || `https://ui-avatars.com/api/?name=${account.firstName}+${account.lastName}&background=667eea&color=fff&size=40&bold=true`;
                 
                 accountDiv.innerHTML = `
                     <div class="account-content" onclick="quickLogin('${account.email}')">
-                        <div class="account-avatar-wrapper">
-                            ${hasAvatar ? 
-                                `<img src="${avatarUrl}" alt="Avatar" class="roxli-account-avatar" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">` : 
-                                ''
-                            }
-                            <div class="roxli-account-initials" style="display: ${hasAvatar ? 'none' : 'flex'}; ${hasAvatar ? 'position: absolute; top: 0; left: 0;' : ''}">
-                                ${account.firstName[0]}${account.lastName[0]}
-                            </div>
-                        </div>
-                        <div class="roxli-account-info">
-                            <div class="roxli-account-name">${account.firstName} ${account.lastName}</div>
-                            <div class="roxli-account-email">${account.email}</div>
-                        </div>
-                    </div>
-                    <button onclick="removeAccount(${index})" class="roxli-remove-account" title="Remove account">×</button>
-                `;
-                accountsList.appendChild(accountDiv);
-            }); src="${avatarUrl}" alt="Avatar" class="roxli-account-avatar">
+                        <img src="${avatarUrl}" alt="Avatar" class="roxli-account-avatar">
                         <div class="roxli-account-info">
                             <div class="roxli-account-name">${account.firstName} ${account.lastName}</div>
                             <div class="roxli-account-email">${account.email}</div>
