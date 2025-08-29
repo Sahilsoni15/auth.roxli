@@ -1,0 +1,240 @@
+{% extends "base.html" %}
+
+{% block title %}Roxli - Home{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="header">
+        <h1>Welcome to Roxli</h1>
+        <div class="user-info" id="userInfo" style="display: none;">
+            <div class="user-profile" onclick="toggleProfileMenu()">
+                <img id="userAvatar" class="avatar" src="" alt="Avatar">
+                <span id="userName"></span>
+                <span class="dropdown-arrow">▼</span>
+            </div>
+            <div class="profile-menu" id="profileMenu">
+                <div class="profile-header">
+                    <img id="menuAvatar" class="menu-avatar" src="" alt="Avatar">
+                    <div class="profile-details">
+                        <div id="menuName" class="profile-name"></div>
+                        <div id="menuEmail" class="profile-email"></div>
+                    </div>
+                </div>
+                <div class="menu-divider"></div>
+                <div id="savedAccountsList" class="saved-accounts-section"></div>
+                <button onclick="addNewAccount()" class="menu-item">
+                    <span class="menu-icon">➕</span> Add Account
+                </button>
+                <button onclick="logout()" class="menu-item logout">
+                    <span class="menu-icon">🚪</span> Sign Out
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="auth-section" id="authSection">
+        <div class="welcome-card">
+            <div class="roxli-logo">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Roxli" style="height: 40px;">
+            </div>
+            <h2>One account. All of Roxli.</h2>
+            <p>Sign in to continue to Account</p>
+            
+            <div class="auth-buttons">
+                <button onclick="openPopup('/popup')" class="btn-primary">Sign in</button>
+                <button onclick="openPopup('/popup?mode=register')" class="btn-secondary">Create account</button>
+            </div>
+            
+            <div class="help-links">
+                <a href="#">Need help?</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="features-section" style="display: none;" id="featuresSection">
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🔐</div>
+                <h4>Secure Login</h4>
+                <p>@roxli.in domain authentication</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎨</div>
+                <h4>Auto Avatars</h4>
+                <p>Generated from initials or custom upload</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔄</div>
+                <h4>Multi-Account</h4>
+                <p>Switch between multiple accounts</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🚀</div>
+                <h4>Easy Integration</h4>
+                <p>Simple SDK for any website</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Check if user is logged in
+fetch('/api/user', {
+    credentials: 'include'
+})
+.then(response => response.json())
+.then(data => {
+    if (data.user) {
+        document.getElementById('userInfo').style.display = 'flex';
+        document.getElementById('authSection').style.display = 'none';
+        document.getElementById('userAvatar').src = data.user.avatar;
+        document.getElementById('userName').textContent = `${data.user.firstName} ${data.user.lastName}`;
+        document.getElementById('menuAvatar').src = data.user.avatar;
+        document.getElementById('menuName').textContent = `${data.user.firstName} ${data.user.lastName}`;
+        document.getElementById('menuEmail').textContent = data.user.email;
+        loadSavedAccountsInMenu(data.user.email);
+    }
+})
+.catch(() => {
+    // User not logged in
+});
+
+function openPopup(url = '/popup') {
+    const popup = window.open(url, 'roxli-auth', 'width=400,height=600,scrollbars=yes,resizable=yes');
+    
+    window.addEventListener('message', function(event) {
+        if (event.origin !== window.location.origin) return;
+        
+        if (event.data.type === 'ROXLI_AUTH_SUCCESS') {
+            popup.close();
+            location.reload();
+        }
+    });
+}
+
+function logout() {
+    fetch('/api/logout', { 
+        method: 'POST',
+        credentials: 'include'
+    })
+    .then(() => location.reload());
+}
+
+function openSwitcher() {
+    window.location.href = '/switch-account';
+}
+
+function toggleProfileMenu() {
+    const menu = document.getElementById('profileMenu');
+    menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+}
+
+function loadSavedAccountsInMenu(currentEmail) {
+    const savedAccounts = JSON.parse(localStorage.getItem('roxli_accounts') || '[]');
+    const accountsList = document.getElementById('savedAccountsList');
+    
+    accountsList.innerHTML = '';
+    
+    const otherAccounts = savedAccounts.filter(acc => acc.email !== currentEmail);
+    
+    if (otherAccounts.length > 0) {
+        const divider = document.createElement('div');
+        divider.className = 'menu-divider';
+        accountsList.appendChild(divider);
+        
+        otherAccounts.forEach(account => {
+            const accountItem = document.createElement('button');
+            accountItem.className = 'menu-item account-switch-item';
+            accountItem.innerHTML = `
+                <img src="${account.avatar}" class="switch-avatar">
+                <div class="switch-info">
+                    <div class="switch-name">${account.firstName} ${account.lastName}</div>
+                    <div class="switch-email">${account.email}</div>
+                </div>
+            `;
+            accountItem.onclick = () => switchToAccount(account.email);
+            accountsList.appendChild(accountItem);
+        });
+    }
+}
+
+async function switchToAccount(email) {
+    try {
+        const response = await fetch('/api/switch-account', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            // Update UI immediately without full page reload
+            document.getElementById('userAvatar').src = data.user.avatar;
+            document.getElementById('userName').textContent = `${data.user.firstName} ${data.user.lastName}`;
+            document.getElementById('menuAvatar').src = data.user.avatar;
+            document.getElementById('menuName').textContent = `${data.user.firstName} ${data.user.lastName}`;
+            document.getElementById('menuEmail').textContent = data.user.email;
+            
+            // Update saved accounts list
+            const savedAccounts = JSON.parse(localStorage.getItem('roxli_accounts') || '[]');
+            const accountIndex = savedAccounts.findIndex(acc => acc.email === email);
+            if (accountIndex !== -1) {
+                savedAccounts[accountIndex] = data.user;
+                localStorage.setItem('roxli_accounts', JSON.stringify(savedAccounts));
+            }
+            
+            // Reload saved accounts in menu
+            loadSavedAccountsInMenu(data.user.email);
+            
+            // Close profile menu
+            document.getElementById('profileMenu').style.display = 'none';
+            
+            // Show success notification
+            showNotification(`Switched to ${data.user.firstName} ${data.user.lastName}`);
+        } else {
+            // Account needs re-authentication
+            openPopup();
+        }
+    } catch (error) {
+        console.error('Account switch failed:', error);
+        openPopup();
+    }
+}
+
+function addNewAccount() {
+    openPopup();
+}
+
+function showNotification(message) {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = 'multi-account-notice';
+    notification.textContent = message;
+    notification.style.position = 'fixed';
+    notification.style.top = '20px';
+    notification.style.right = '20px';
+    notification.style.zIndex = '9999';
+    notification.style.maxWidth = '300px';
+    
+    document.body.appendChild(notification);
+    
+    // Remove after 3 seconds
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+        }
+    }, 3000);
+}
+
+// Close profile menu when clicking outside
+document.addEventListener('click', function(event) {
+    const userInfo = document.getElementById('userInfo');
+    const profileMenu = document.getElementById('profileMenu');
+    
+    if (userInfo && !userInfo.contains(event.target)) {
+        profileMenu.style.display = 'none';
+    }
+});
+</script>
+{% endblock %}

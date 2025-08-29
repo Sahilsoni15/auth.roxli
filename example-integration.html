@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Example Integration - Sign in with Roxli</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .auth-section {
+            border: 2px dashed #ddd;
+            padding: 30px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .user-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            display: none;
+        }
+        
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            display: block;
+        }
+        
+        .roxli-signin-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        
+        .roxli-signin-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        
+        .code-example {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #667eea;
+        }
+        
+        .code-example pre {
+            margin: 0;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+        }
+        
+        .status {
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Example Website Integration</h1>
+            <p>This demonstrates how to integrate Roxli authentication into any website</p>
+        </div>
+        
+        <div class="auth-section" id="authSection">
+            <h3>🔐 Authentication Required</h3>
+            <p>Please sign in to access this content</p>
+            <button onclick="signInWithRoxli()" class="roxli-signin-btn">
+                <span>🔑</span> Sign in with Roxli
+            </button>
+        </div>
+        
+        <div class="user-info" id="userInfo">
+            <h3>✅ Welcome!</h3>
+            <img id="userAvatar" class="user-avatar" src="" alt="User Avatar">
+            <p><strong>Name:</strong> <span id="userName"></span></p>
+            <p><strong>Email:</strong> <span id="userEmail"></span></p>
+            <button onclick="signOut()" class="btn-secondary">Sign Out</button>
+        </div>
+        
+        <div id="statusMessage"></div>
+        
+        <div class="code-example">
+            <h4>📝 Integration Code Used:</h4>
+            <pre><code>&lt;!-- Include Roxli SDK --&gt;
+&lt;script src="http://localhost:5000/static/js/roxli-sdk.js"&gt;&lt;/script&gt;
+
+&lt;!-- Add login button --&gt;
+&lt;button onclick="signInWithRoxli()" class="roxli-signin-btn"&gt;
+    Sign in with Roxli
+&lt;/button&gt;
+
+&lt;script&gt;
+function signInWithRoxli() {
+    RoxliAuth.signIn({
+        onSuccess: function(user) {
+            showUserInfo(user);
+            showStatus('Login successful!', 'success');
+        },
+        onError: function(error) {
+            showStatus('Login failed: ' + error, 'error');
+        }
+    });
+}
+
+function signOut() {
+    RoxliAuth.signOut().then(() => {
+        showAuthSection();
+        showStatus('Signed out successfully', 'success');
+    });
+}
+&lt;/script&gt;</code></pre>
+        </div>
+        
+        <div class="code-example">
+            <h4>🔍 Check Authentication Status:</h4>
+            <pre><code>// Check if user is already logged in
+const user = RoxliAuth.getUser();
+if (user) {
+    console.log('User is logged in:', user);
+    showUserInfo(user);
+} else {
+    console.log('User is not logged in');
+    showAuthSection();
+}
+
+// Listen for authentication changes
+RoxliAuth.onAuthStateChanged(function(user) {
+    if (user) {
+        showUserInfo(user);
+    } else {
+        showAuthSection();
+    }
+});</code></pre>
+        </div>
+    </div>
+
+    <!-- Include Roxli SDK -->
+    <script src="http://localhost:5000/static/js/roxli-sdk.js"></script>
+    
+    <script>
+        function signInWithRoxli() {
+            RoxliAuth.signIn({
+                onSuccess: function(user) {
+                    showUserInfo(user);
+                    showStatus('Login successful! Welcome ' + user.firstName + '!', 'success');
+                },
+                onError: function(error) {
+                    showStatus('Login failed: ' + error, 'error');
+                }
+            });
+        }
+        
+        function signOut() {
+            RoxliAuth.signOut().then(() => {
+                showAuthSection();
+                showStatus('Signed out successfully', 'success');
+            });
+        }
+        
+        function showUserInfo(user) {
+            document.getElementById('authSection').style.display = 'none';
+            document.getElementById('userInfo').style.display = 'block';
+            document.getElementById('userAvatar').src = user.avatar;
+            document.getElementById('userName').textContent = user.firstName + ' ' + user.lastName;
+            document.getElementById('userEmail').textContent = user.email;
+        }
+        
+        function showAuthSection() {
+            document.getElementById('authSection').style.display = 'block';
+            document.getElementById('userInfo').style.display = 'none';
+        }
+        
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('statusMessage');
+            statusDiv.innerHTML = `<div class="status ${type}">${message}</div>`;
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                statusDiv.innerHTML = '';
+            }, 5000);
+        }
+        
+        // Check authentication status on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const user = RoxliAuth.getUser();
+            if (user) {
+                showUserInfo(user);
+                showStatus('Already logged in as ' + user.firstName, 'success');
+            } else {
+                showAuthSection();
+            }
+        });
+        
+        // Listen for authentication state changes
+        RoxliAuth.onAuthStateChanged(function(user) {
+            if (user) {
+                showUserInfo(user);
+            } else {
+                showAuthSection();
+            }
+        });
+    </script>
+</body>
+</html>

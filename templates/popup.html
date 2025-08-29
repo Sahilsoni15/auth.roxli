@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose an account - Roxli</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .name-row {
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
+            margin-bottom: 16px;
+        }
+        
+        .half-width {
+            flex: 1;
+        }
+        
+        .avatar-mini {
+            width: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .avatar-preview {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 1px solid #e0e0e0;
+            display: none;
+        }
+    </style>
+</head>
+<body class="popup-body-roxli">
+    <div class="roxli-popup-container">
+        <div class="roxli-popup-header">
+            <div class="roxli-logo-small">
+                <img src="{{ url_for('static', filename='images/logo1.png') }}" alt="Roxli" class="popup-logo-img" onload="this.style.display='block'" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                <div class="roxli-logo-fallback" style="display: none;">
+                    <span class="logo-r">R</span>
+                    <span class="logo-o">o</span>
+                    <span class="logo-x">x</span>
+                    <span class="logo-l">l</span>
+                    <span class="logo-i">i</span>
+                </div>
+            </div>
+            <h2>Choose an account</h2>
+            <p class="popup-subtitle-roxli">to continue to Roxli</p>
+        </div>
+        
+        <div id="accountsList" class="roxli-accounts-list"></div>
+        
+        <div class="roxli-popup-actions">
+            <button onclick="addAccount()" class="roxli-add-account">
+                <div class="add-account-icon">👤</div>
+                <span>Use another account</span>
+            </button>
+        </div>
+        
+        <div id="loginForm" class="roxli-popup-login" style="display: none;">
+            <div class="login-back">
+                <button onclick="showAccounts()" class="back-button">←</button>
+                <h3>Sign in</h3>
+            </div>
+            
+            <form id="quickLoginForm" class="roxli-form">
+                <div class="roxli-input-group">
+                    <div class="roxli-input-wrapper">
+                        <input type="text" id="emailPrefix" required class="roxli-input" oninput="this.value = this.value.toLowerCase()">
+                        <label class="roxli-label">Email</label>
+                        <span class="roxli-domain">@roxli.in</span>
+                    </div>
+                </div>
+                
+                <div class="roxli-input-group">
+                    <div class="roxli-input-wrapper">
+                        <input type="password" id="password" required class="roxli-input">
+                        <label class="roxli-label">Password</label>
+                        <button type="button" class="password-toggle" onclick="togglePassword()">
+                            <span id="toggleIcon">👁️</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="roxli-popup-form-actions">
+                    <a href="#" onclick="openRegister()" class="roxli-link">Create account</a>
+                    <button type="submit" class="roxli-btn-primary">
+                        <span class="btn-text">Next</span>
+                        <div class="btn-spinner" style="display: none;"></div>
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <div id="registerForm" class="roxli-popup-login" style="display: none;">
+            <div class="login-back">
+                <button onclick="showAccounts()" class="back-button">←</button>
+                <h3>Create account</h3>
+            </div>
+            
+            <form id="quickRegisterForm" class="roxli-form">
+                <div class="name-row">
+                    <div class="roxli-input-group half-width">
+                        <div class="roxli-input-wrapper">
+                            <input type="text" id="regFirstName" required class="roxli-input" oninput="updateAvatarPreview()">
+                            <label class="roxli-label">First name</label>
+                        </div>
+                    </div>
+                    
+                    <div class="roxli-input-group half-width">
+                        <div class="roxli-input-wrapper">
+                            <input type="text" id="regLastName" required class="roxli-input" oninput="updateAvatarPreview()">
+                            <label class="roxli-label">Last name</label>
+                        </div>
+                    </div>
+                    
+                    <div class="avatar-mini">
+                        <img id="avatarPreview" src="" alt="" class="avatar-preview">
+                    </div>
+                </div>
+                
+                <div class="roxli-input-group">
+                    <div class="roxli-input-wrapper">
+                        <input type="text" id="regEmailPrefix" required class="roxli-input" oninput="this.value = this.value.toLowerCase()">
+                        <label class="roxli-label">Email</label>
+                        <span class="roxli-domain">@roxli.in</span>
+                    </div>
+                </div>
+                
+                <div class="roxli-input-group">
+                    <div class="roxli-input-wrapper">
+                        <input type="password" id="regPassword" required class="roxli-input">
+                        <label class="roxli-label">Password</label>
+                    </div>
+                </div>
+                
+                <div class="roxli-popup-form-actions">
+                    <a href="#" onclick="showLogin()" class="roxli-link">Sign in instead</a>
+                    <button type="submit" class="roxli-btn-primary">
+                        <span class="btn-text">Create</span>
+                        <div class="btn-spinner" style="display: none;"></div>
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="error-message" id="errorMessage"></div>
+        
+        <div class="roxli-popup-footer">
+            <div class="footer-links-small">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Auto detect system theme for popup
+        function setTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            const theme = savedTheme || systemTheme;
+            document.documentElement.setAttribute('data-theme', theme);
+        }
+        
+        // Set theme on load
+        setTheme();
+        
+        // Listen for system theme changes
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', setTheme);
+        
+        let savedAccounts = JSON.parse(localStorage.getItem('roxli_accounts') || '[]');
+        let isLoading = false;
+        
+        function showAccounts() {
+            document.getElementById('accountsList').style.display = 'block';
+            document.getElementById('loginForm').style.display = 'none';
+            loadSavedAccounts();
+        }
+        
+        function loadSavedAccounts() {
+            const accountsList = document.getElementById('accountsList');
+            accountsList.innerHTML = '';
+            
+            if (savedAccounts.length === 0) {
+                addAccount();
+                return;
+            }
+            
+            // Set dynamic height based on number of accounts - show up to 6 accounts
+            const maxVisibleAccounts = Math.min(savedAccounts.length, 6);
+            accountsList.style.maxHeight = `${maxVisibleAccounts * 70}px`;
+            accountsList.style.overflowY = savedAccounts.length > 6 ? 'auto' : 'visible';
+            accountsList.style.scrollbarWidth = 'thin';
+            
+            savedAccounts.forEach((account, index) => {
+                const accountDiv = document.createElement('div');
+                accountDiv.className = 'roxli-account-item';
+                // Generate consistent avatar
+                const avatarUrl = account.avatar || `https://ui-avatars.com/api/?name=${account.firstName}+${account.lastName}&background=667eea&color=fff&size=40&bold=true`;
+                
+                accountDiv.innerHTML = `
+                    <div class="account-content" onclick="quickLogin('${account.email}')">
+                        <img src="${avatarUrl}" alt="Avatar" class="roxli-account-avatar">
+                        <div class="roxli-account-info">
+                            <div class="roxli-account-name">${account.firstName} ${account.lastName}</div>
+                            <div class="roxli-account-email">${account.email}</div>
+                        </div>
+                    </div>
+                    <button onclick="removeAccount(${index})" class="roxli-remove-account" title="Remove account">×</button>
+                `;
+                accountsList.appendChild(accountDiv);
+            });
+        }
+        
+        function removeAccount(index) {
+            if (confirm('Remove account from this device?')) {
+                savedAccounts.splice(index, 1);
+                localStorage.setItem('roxli_accounts', JSON.stringify(savedAccounts));
+                loadSavedAccounts();
+            }
+        }
+        
+        function addAccount() {
+            document.getElementById('accountsList').style.display = 'none';
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('emailPrefix').focus();
+        }
+        
+        async function quickLogin(email) {
+            try {
+                const response = await fetch('/api/switch-account', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Update saved accounts with latest login time
+                    const accountIndex = savedAccounts.findIndex(acc => acc.email === email);
+                    if (accountIndex !== -1) {
+                        savedAccounts[accountIndex] = data.user;
+                        localStorage.setItem('roxli_accounts', JSON.stringify(savedAccounts));
+                    }
+                    
+                    // Send message to all possible origins
+                    const origins = ['https://auth.roxli.in', 'https://account.roxli.in', 'https://mail.roxli.in'];
+                    origins.forEach(origin => {
+                        try {
+                            window.opener.postMessage({ type: 'ROXLI_AUTH_SUCCESS', user: data.user, token: data.token }, origin);
+                        } catch(e) {}
+                    });
+                    window.close();
+                } else {
+                    document.getElementById('emailPrefix').value = email.split('@')[0];
+                    addAccount();
+                }
+            } catch (error) {
+                document.getElementById('emailPrefix').value = email.split('@')[0];
+                addAccount();
+            }
+        }
+        
+        function openRegister() {
+            showRegister();
+        }
+        
+        function showRegister() {
+            document.getElementById('accountsList').style.display = 'none';
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('registerForm').style.display = 'block';
+            document.getElementById('regFirstName').focus();
+        }
+        
+        function showLogin() {
+            document.getElementById('accountsList').style.display = 'none';
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('registerForm').style.display = 'none';
+            document.getElementById('emailPrefix').focus();
+        }
+        
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const toggleIcon = document.getElementById('toggleIcon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.textContent = '🙈';
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.textContent = '👁️';
+            }
+        }
+        
+        function setLoading(loading) {
+            isLoading = loading;
+            const btnText = document.querySelector('.btn-text');
+            const btnSpinner = document.querySelector('.btn-spinner');
+            const submitBtn = document.querySelector('button[type="submit"]');
+            
+            if (loading) {
+                btnText.style.display = 'none';
+                btnSpinner.style.display = 'block';
+                submitBtn.disabled = true;
+            } else {
+                btnText.style.display = 'block';
+                btnSpinner.style.display = 'none';
+                submitBtn.disabled = false;
+            }
+        }
+        
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            errorDiv.classList.add('shake');
+            
+            setTimeout(() => {
+                errorDiv.classList.remove('shake');
+            }, 500);
+        }
+        
+        // Handle login form
+        document.getElementById('quickLoginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (isLoading) return;
+            
+            const emailPrefix = document.getElementById('emailPrefix').value;
+            const password = document.getElementById('password').value;
+            const email = `${emailPrefix}@roxli.in`;
+            
+            setLoading(true);
+            
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Save account for future use
+                    const existingIndex = savedAccounts.findIndex(acc => acc.email === email);
+                    if (existingIndex === -1) {
+                        savedAccounts.push(data.user);
+                    } else {
+                        savedAccounts[existingIndex] = data.user;
+                    }
+                    localStorage.setItem('roxli_accounts', JSON.stringify(savedAccounts));
+                    
+                    // Send message to all possible origins
+                    const origins = ['https://auth.roxli.in', 'https://account.roxli.in', 'https://mail.roxli.in'];
+                    origins.forEach(origin => {
+                        try {
+                            window.opener.postMessage({ type: 'ROXLI_AUTH_SUCCESS', user: data.user, token: data.token }, origin);
+                        } catch(e) {}
+                    });
+                    window.close();
+                } else {
+                    showError(data.error);
+                }
+            } catch (error) {
+                showError('Sign in failed. Please try again.');
+            } finally {
+                setLoading(false);
+            }
+        });
+        
+        // Handle register form
+        document.getElementById('quickRegisterForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (isLoading) return;
+            
+            const firstName = document.getElementById('regFirstName').value;
+            const lastName = document.getElementById('regLastName').value;
+            const emailPrefix = document.getElementById('regEmailPrefix').value;
+            const password = document.getElementById('regPassword').value;
+            const email = `${emailPrefix}@roxli.in`;
+            
+            setLoading(true);
+            
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ firstName, lastName, email, password })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Ensure user has consistent avatar
+                    data.user.avatar = generateAvatar(firstName, lastName);
+                    
+                    // Save account for future use
+                    savedAccounts.push(data.user);
+                    localStorage.setItem('roxli_accounts', JSON.stringify(savedAccounts));
+                    
+                    // Send message to all possible origins
+                    const origins = ['https://auth.roxli.in', 'https://account.roxli.in', 'https://mail.roxli.in'];
+                    origins.forEach(origin => {
+                        try {
+                            window.opener.postMessage({ type: 'ROXLI_AUTH_SUCCESS', user: data.user, token: data.token }, origin);
+                        } catch(e) {}
+                    });
+                    window.close();
+                } else {
+                    showError(data.error);
+                }
+            } catch (error) {
+                showError('Registration failed. Please try again.');
+            } finally {
+                setLoading(false);
+            }
+        });
+        
+        // Generate avatar function using ui-avatars.com for consistency
+        function generateAvatar(firstName, lastName) {
+            if (!firstName || !lastName) return '';
+            const name = `${firstName}+${lastName}`;
+            return `https://ui-avatars.com/api/?name=${name}&background=667eea&color=fff&size=200&bold=true`;
+        }
+        
+        // Update avatar preview
+        function updateAvatarPreview() {
+            const firstName = document.getElementById('regFirstName').value;
+            const lastName = document.getElementById('regLastName').value;
+            const avatarPreview = document.getElementById('avatarPreview');
+            
+            if (firstName && lastName) {
+                avatarPreview.src = generateAvatar(firstName, lastName);
+                avatarPreview.style.display = 'block';
+            } else {
+                avatarPreview.style.display = 'none';
+            }
+        }
+        
+        // Check URL parameters for mode
+        const urlParams = new URLSearchParams(window.location.search);
+        const mode = urlParams.get('mode');
+        
+        if (mode === 'register') {
+            showRegister();
+        } else {
+            showAccounts();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,264 @@
+{% extends "base.html" %}
+
+{% block title %}Create account - Roxli{% endblock %}
+
+{% block content %}
+<div class="roxli-auth-container">
+    <div class="roxli-auth-card">
+        <div class="roxli-header">
+            <div class="roxli-logo">
+                <img src="{{ url_for('static', filename='images/logo1.png') }}" alt="Roxli" class="header-logo-img" onload="this.style.display='block'" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                <div class="roxli-logo-fallback" style="display: none;">
+                    <span class="logo-r">R</span>
+                    <span class="logo-o">o</span>
+                    <span class="logo-x">x</span>
+                    <span class="logo-l">l</span>
+                    <span class="logo-i">i</span>
+                </div>
+            </div>
+            <h1>Create your Roxli Account</h1>
+            <p class="roxli-subtitle">Enter your information</p>
+        </div>
+        
+        <form id="registerForm" class="roxli-form">
+            <div class="roxli-row">
+                <div class="roxli-input-group">
+                    <div class="roxli-input-wrapper">
+                        <input type="text" id="firstName" required class="roxli-input">
+                        <label class="roxli-label">First name</label>
+                    </div>
+                </div>
+                <div class="roxli-input-group">
+                    <div class="roxli-input-wrapper">
+                        <input type="text" id="lastName" required class="roxli-input">
+                        <label class="roxli-label">Last name</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="roxli-input-group">
+                <div class="roxli-input-wrapper">
+                    <input type="text" id="emailPrefix" required class="roxli-input" oninput="this.value = this.value.toLowerCase()">
+                    <label class="roxli-label">Username</label>
+                    <span class="roxli-domain">@roxli.in</span>
+                </div>
+            </div>
+            
+            <div class="roxli-input-group">
+                <div class="roxli-input-wrapper">
+                    <input type="password" id="password" required class="roxli-input">
+                    <label class="roxli-label">Password</label>
+                    <button type="button" class="password-toggle" onclick="togglePassword()">
+                        <span id="toggleIcon">👁️</span>
+                    </button>
+                </div>
+                <div class="password-help">
+                    Use 8 or more characters with a mix of letters, numbers & symbols
+                </div>
+            </div>
+            
+            <div class="avatar-section-roxli">
+                <div class="avatar-preview-roxli" id="avatarPreview">
+                    <span id="avatarInitials"></span>
+                </div>
+                <div class="avatar-info">
+                    <p class="avatar-title">Profile picture</p>
+                    <p class="avatar-subtitle">A picture helps personalize your account</p>
+                    <input type="file" id="avatarUpload" accept="image/*" style="display: none;">
+                    <button type="button" onclick="document.getElementById('avatarUpload').click()" class="roxli-btn-text">
+                        Upload photo
+                    </button>
+                </div>
+            </div>
+            
+            <div class="roxli-actions">
+                <a href="/login" class="roxli-link">Sign in instead</a>
+                <button type="submit" class="roxli-btn-primary">
+                    <span class="btn-text">Create</span>
+                    <div class="btn-spinner" style="display: none;"></div>
+                </button>
+            </div>
+        </form>
+        
+        <div class="error-message" id="errorMessage"></div>
+    </div>
+    
+    <div class="roxli-footer">
+        <select class="language-select">
+            <option>English (United States)</option>
+        </select>
+        <div class="footer-links">
+            <a href="#">Help</a>
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
+        </div>
+    </div>
+</div>
+
+<script>
+let customAvatar = null;
+let isLoading = false;
+
+// Update avatar preview when names change
+document.getElementById('firstName').addEventListener('input', updateAvatarPreview);
+document.getElementById('lastName').addEventListener('input', updateAvatarPreview);
+
+async function updateAvatarPreview() {
+    const firstName = document.getElementById('firstName').value;
+    const lastName = document.getElementById('lastName').value;
+    
+    if (firstName && lastName && !customAvatar) {
+        try {
+            // Generate avatar using backend API
+            const response = await fetch('/api/generate-avatar', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ firstName, lastName })
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                document.getElementById('avatarPreview').style.backgroundImage = `url(${data.avatar})`;
+                document.getElementById('avatarPreview').style.backgroundSize = 'cover';
+                document.getElementById('avatarPreview').style.backgroundPosition = 'center';
+                document.getElementById('avatarInitials').textContent = '';
+            } else {
+                // Fallback to initials display
+                const initials = `${firstName[0].toUpperCase()}${lastName[0].toUpperCase()}`;
+                document.getElementById('avatarInitials').textContent = initials;
+                const colors = ['#2ecc71', '#3498db', '#9b59b6', '#e74c3c', '#f39c12', '#1abc9c'];
+                const colorIndex = (firstName.charCodeAt(0) + lastName.charCodeAt(0)) % colors.length;
+                document.getElementById('avatarPreview').style.backgroundColor = colors[colorIndex];
+                document.getElementById('avatarPreview').style.backgroundImage = '';
+            }
+        } catch (error) {
+            // Fallback to initials display
+            const initials = `${firstName[0].toUpperCase()}${lastName[0].toUpperCase()}`;
+            document.getElementById('avatarInitials').textContent = initials;
+            const colors = ['#2ecc71', '#3498db', '#9b59b6', '#e74c3c', '#f39c12', '#1abc9c'];
+            const colorIndex = (firstName.charCodeAt(0) + lastName.charCodeAt(0)) % colors.length;
+            document.getElementById('avatarPreview').style.backgroundColor = colors[colorIndex];
+            document.getElementById('avatarPreview').style.backgroundImage = '';
+        }
+    }
+}
+
+// Handle avatar upload
+document.getElementById('avatarUpload').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        if (file.size > 5 * 1024 * 1024) {
+            showError('Image size should be less than 5MB');
+            return;
+        }
+        
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            customAvatar = e.target.result;
+            document.getElementById('avatarPreview').style.backgroundImage = `url(${customAvatar})`;
+            document.getElementById('avatarPreview').style.backgroundSize = 'cover';
+            document.getElementById('avatarPreview').style.backgroundPosition = 'center';
+            document.getElementById('avatarInitials').textContent = '';
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+// Handle form submission
+document.getElementById('registerForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    if (isLoading) return;
+    
+    const firstName = document.getElementById('firstName').value;
+    const lastName = document.getElementById('lastName').value;
+    const emailPrefix = document.getElementById('emailPrefix').value;
+    const password = document.getElementById('password').value;
+    const email = `${emailPrefix}@roxli.in`;
+    
+    setLoading(true);
+    
+    try {
+        const response = await fetch('/api/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                firstName,
+                lastName,
+                email,
+                password,
+                avatar: customAvatar
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            showSuccess();
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 800);
+        } else {
+            showError(data.error);
+        }
+    } catch (error) {
+        showError('Account creation failed. Please try again.');
+    } finally {
+        setLoading(false);
+    }
+});
+
+function setLoading(loading) {
+    isLoading = loading;
+    const btnText = document.querySelector('.btn-text');
+    const btnSpinner = document.querySelector('.btn-spinner');
+    const submitBtn = document.querySelector('button[type="submit"]');
+    
+    if (loading) {
+        btnText.style.display = 'none';
+        btnSpinner.style.display = 'block';
+        submitBtn.disabled = true;
+    } else {
+        btnText.style.display = 'block';
+        btnSpinner.style.display = 'none';
+        submitBtn.disabled = false;
+    }
+}
+
+function showError(message) {
+    const errorDiv = document.getElementById('errorMessage');
+    errorDiv.textContent = message;
+    errorDiv.style.display = 'block';
+    errorDiv.classList.add('shake');
+    
+    setTimeout(() => {
+        errorDiv.classList.remove('shake');
+    }, 500);
+}
+
+function showSuccess() {
+    const submitBtn = document.querySelector('button[type="submit"]');
+    submitBtn.innerHTML = '<span>✓ Account created</span>';
+    submitBtn.style.background = '#34a853';
+}
+
+function togglePassword() {
+    const passwordInput = document.getElementById('password');
+    const toggleIcon = document.getElementById('toggleIcon');
+    
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleIcon.textContent = '🙈';
+    } else {
+        passwordInput.type = 'password';
+        toggleIcon.textContent = '👁️';
+    }
+}
+
+// Initialize avatar preview
+document.addEventListener('DOMContentLoaded', function() {
+    updateAvatarPreview();
+    document.getElementById('firstName').focus();
+});
+</script>
+{% endblock %}

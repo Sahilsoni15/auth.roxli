@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% block title %}Account Switcher - Roxli{% endblock %}
+
+{% block content %}
+<div class="switcher-container">
+    <div class="switcher-header">
+        <h2>Switch Account</h2>
+        <p>Choose an account to continue</p>
+    </div>
+    
+    <div class="accounts-grid" id="accountsGrid"></div>
+    
+    <div class="switcher-actions">
+        <button onclick="addNewAccount()" class="btn-primary">Add Another Account</button>
+        <button onclick="window.close()" class="btn-secondary">Cancel</button>
+    </div>
+</div>
+
+<style>
+.switcher-container {
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 30px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.switcher-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.accounts-grid {
+    display: grid;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.account-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 20px;
+    border: 2px solid #f0f0f0;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.account-card:hover {
+    border-color: #4285f4;
+    background: #f8f9ff;
+}
+
+.account-card.current {
+    border-color: #4285f4;
+    background: #e3f2fd;
+}
+
+.account-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.account-details {
+    flex: 1;
+}
+
+.account-name {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.account-email {
+    color: #666;
+    font-size: 14px;
+}
+
+.account-status {
+    font-size: 12px;
+    color: #4285f4;
+    font-weight: 500;
+}
+
+.switcher-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+</style>
+
+<script>
+let savedAccounts = JSON.parse(localStorage.getItem('roxli_accounts') || '[]');
+let currentUser = null;
+
+// Get current user
+fetch('/api/user')
+    .then(response => response.json())
+    .then(data => {
+        if (data.user) {
+            currentUser = data.user;
+        }
+        loadAccounts();
+    })
+    .catch(() => {
+        loadAccounts();
+    });
+
+function loadAccounts() {
+    const grid = document.getElementById('accountsGrid');
+    grid.innerHTML = '';
+    
+    if (savedAccounts.length === 0) {
+        grid.innerHTML = '<p style="text-align: center; color: #666;">No saved accounts</p>';
+        return;
+    }
+    
+    savedAccounts.forEach(account => {
+        const isCurrentUser = currentUser && currentUser.email === account.email;
+        
+        const accountCard = document.createElement('div');
+        accountCard.className = `account-card ${isCurrentUser ? 'current' : ''}`;
+        accountCard.innerHTML = `
+            <img src="${account.avatar}" alt="Avatar" class="account-avatar">
+            <div class="account-details">
+                <div class="account-name">${account.firstName} ${account.lastName}</div>
+                <div class="account-email">${account.email}</div>
+                ${isCurrentUser ? '<div class="account-status">Currently signed in</div>' : ''}
+            </div>
+        `;
+        
+        if (!isCurrentUser) {
+            accountCard.onclick = () => switchToAccount(account);
+        }
+        
+        grid.appendChild(accountCard);
+    });
+}
+
+function switchToAccount(account) {
+    // Try to switch to this account
+    fetch('/api/switch-account', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: account.email })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            window.location.href = '/';
+        } else {
+            // Need to login with password
+            window.location.href = `/login?email=${encodeURIComponent(account.email)}`;
+        }
+    })
+    .catch(() => {
+        window.location.href = `/login?email=${encodeURIComponent(account.email)}`;
+    });
+}
+
+function addNewAccount() {
+    window.location.href = '/login';
+}
+</script>
+{% endblock %}

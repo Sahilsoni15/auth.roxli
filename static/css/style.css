@@ -1,0 +1,2168 @@
+/* Roxli Authentication System - Professional Theme */
+
+/* CSS Variables */
+:root {
+    --roxli-blue: #667eea;
+    --roxli-blue-hover: #5a67d8;
+    --roxli-green: #34a853;
+    --roxli-yellow: #fbbc05;
+    --roxli-red: #ea4335;
+    --roxli-grey: #5f6368;
+    --roxli-grey-light: #9aa0a6;
+    
+    --bg-white: #ffffff;
+    --bg-grey: #f8f9fa;
+    --text-primary: #202124;
+    --text-secondary: #5f6368;
+    --border-grey: #dadce0;
+    --border-focus: #667eea;
+    
+    --shadow-1: 0 1px 2px 0 rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.15);
+    --shadow-2: 0 1px 2px 0 rgba(60,64,67,.3), 0 2px 6px 2px rgba(60,64,67,.15);
+    --shadow-3: 0 4px 8px 3px rgba(60,64,67,.15), 0 1px 3px rgba(60,64,67,.3);
+    
+    --radius: 4px;
+    --radius-lg: 8px;
+    --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Roxli Logo Colors */
+.roxli-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.roxli-logo-small {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.logo-r { color: #667eea; }
+.logo-o { color: #764ba2; }
+.logo-x { color: #667eea; }
+.logo-l { color: #764ba2; }
+.logo-i { color: #667eea; }
+
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg-white);
+    color: var(--text-primary);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Roxli Auth Container */
+.roxli-auth-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 2rem 1rem;
+    background: var(--bg-white);
+}
+
+.roxli-auth-card {
+    background: var(--bg-white);
+    border: 1px solid var(--border-grey);
+    border-radius: var(--radius-lg);
+    padding: 3rem 2.5rem 2rem;
+    width: 100%;
+    max-width: 450px;
+    box-shadow: var(--shadow-2);
+}
+
+.roxli-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.roxli-header h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+    font-family: 'Inter', sans-serif;
+}
+
+.roxli-subtitle {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+/* Roxli Form Styles */
+.roxli-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.roxli-row {
+    display: flex;
+    gap: 1rem;
+}
+
+.roxli-input-group {
+    position: relative;
+    flex: 1;
+}
+
+.roxli-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    border: 2px solid var(--border-grey);
+    border-radius: 8px;
+    transition: var(--transition);
+    background: var(--bg-white);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.roxli-input-wrapper:focus-within {
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1), 0 1px 3px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+}
+
+.roxli-input-wrapper:hover {
+    border-color: #9aa0a6;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.roxli-input {
+    width: 100%;
+    padding: 1rem;
+    border: none;
+    background: transparent;
+    font-size: 1rem;
+    color: var(--text-primary);
+    outline: none;
+    font-weight: 400;
+}
+
+.roxli-input::placeholder {
+    color: transparent;
+}
+
+.roxli-input:focus + .roxli-label,
+.roxli-input:not(:placeholder-shown) + .roxli-label {
+    transform: translateY(-2rem) scale(0.8);
+    color: var(--border-focus);
+    font-weight: 500;
+}
+
+.roxli-label {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    font-size: 1rem;
+    pointer-events: none;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    background: var(--bg-white);
+    padding: 0 0.5rem;
+    font-weight: 400;
+}
+
+.roxli-domain {
+    padding: 1rem;
+    color: var(--text-secondary);
+    font-size: 1rem;
+    border-left: 2px solid var(--border-grey);
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    font-weight: 500;
+    min-width: 80px;
+    text-align: center;
+}
+
+.password-toggle {
+    background: none;
+    border: none;
+    padding: 1rem;
+    cursor: pointer;
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    border-radius: 4px;
+    transition: var(--transition);
+}
+
+.password-toggle:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: var(--text-primary);
+}
+
+.password-help {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+}
+
+/* Roxli Buttons */
+.roxli-btn-primary {
+    background: var(--roxli-blue);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-width: 80px;
+}
+
+.roxli-btn-primary:hover {
+    background: var(--roxli-blue-hover);
+    box-shadow: var(--shadow-1);
+}
+
+.roxli-btn-primary:disabled {
+    background: var(--roxli-grey-light);
+    cursor: not-allowed;
+}
+
+.roxli-btn-secondary {
+    background: var(--bg-white);
+    color: var(--text-primary);
+    border: 1px solid var(--border-grey);
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.roxli-btn-secondary:hover {
+    background: var(--bg-grey);
+    box-shadow: var(--shadow-1);
+}
+
+.roxli-btn-text {
+    background: none;
+    border: none;
+    color: var(--roxli-blue);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 0.5rem 0;
+}
+
+.google-btn-text:hover {
+    text-decoration: underline;
+}
+
+.roxli-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+}
+
+.roxli-link {
+    color: var(--roxli-blue);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.google-link:hover {
+    text-decoration: underline;
+}
+
+/* Roxli Divider */
+.roxli-divider {
+    text-align: center;
+    margin: 2rem 0 1rem;
+    position: relative;
+}
+
+.roxli-divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--border-grey);
+}
+
+.roxli-divider span {
+    background: var(--bg-white);
+    padding: 0 1rem;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    position: relative;
+}
+
+/* Avatar Section */
+.avatar-section-roxli {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    border: 1px solid var(--border-grey);
+    border-radius: var(--radius);
+    margin: 1rem 0;
+}
+
+.avatar-preview-roxli {
+    width: 6rem;
+    height: 6rem;
+    border-radius: 50%;
+    background: var(--roxli-blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 2rem;
+    font-weight: 600;
+    background-size: cover;
+    background-position: center;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    border: 3px solid white;
+}
+
+.avatar-info {
+    flex: 1;
+}
+
+.avatar-title {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.avatar-subtitle {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.75rem;
+    line-height: 1.3;
+}
+
+/* Roxli Footer */
+.roxli-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+    padding: 0 1rem;
+    max-width: 450px;
+    width: 100%;
+}
+
+.language-select {
+    border: none;
+    background: none;
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    cursor: pointer;
+}
+
+.footer-links {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.footer-links a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.75rem;
+}
+
+.footer-links a:hover {
+    text-decoration: underline;
+}
+
+/* Spinner */
+.btn-spinner {
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid transparent;
+    border-top: 2px solid currentColor;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Roxli Popup Styles */
+.popup-body-roxli {
+    background: var(--bg-white);
+    margin: 0;
+    padding: 1rem;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.roxli-popup-container {
+    max-width: 400px;
+    margin: 0 auto;
+    background: var(--bg-white);
+    border: 1px solid var(--border-grey);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-3);
+    overflow: hidden;
+}
+
+.roxli-popup-header {
+    text-align: center;
+    padding: 2rem 1.5rem 1rem;
+    border-bottom: 1px solid var(--border-grey);
+}
+
+.roxli-popup-header h2 {
+    font-size: 1.25rem;
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.popup-subtitle-roxli {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+.roxli-accounts-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.roxli-account-item {
+    position: relative;
+    border-bottom: 1px solid var(--border-grey);
+    transition: var(--transition);
+}
+
+.roxli-account-item:hover {
+    background: var(--bg-grey);
+}
+
+.roxli-account-info {
+    flex: 1;
+}
+
+.roxli-account-name {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 0.125rem;
+}
+
+.roxli-account-email {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.roxli-remove-account {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.25rem;
+    cursor: pointer;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: var(--transition);
+}
+
+.roxli-account-item:hover .roxli-remove-account {
+    opacity: 1;
+}
+
+.roxli-remove-account:hover {
+    background: var(--border-grey);
+}
+
+.roxli-popup-actions {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border-grey);
+}
+
+.roxli-add-account {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-grey);
+    border-radius: var(--radius);
+    background: var(--bg-white);
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 0.875rem;
+    color: var(--text-primary);
+}
+
+.roxli-add-account:hover {
+    background: var(--bg-grey);
+    box-shadow: var(--shadow-1);
+}
+
+.roxli-popup-login {
+    padding: 1.5rem;
+}
+
+.roxli-popup-form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5rem;
+}
+
+.roxli-popup-footer {
+    padding: 1rem 1.5rem;
+    background: var(--bg-grey);
+    text-align: center;
+}
+
+/* Roxli Popup Styles */
+.popup-body-roxli {
+    background: var(--bg-white);
+    margin: 0;
+    padding: 1rem;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.roxli-popup-container {
+    max-width: 400px;
+    margin: 0 auto;
+    background: var(--bg-white);
+    border: 1px solid var(--border-grey);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-3);
+    overflow: hidden;
+}
+
+.roxli-popup-header {
+    text-align: center;
+    padding: 2rem 1.5rem 1rem;
+    border-bottom: 1px solid var(--border-grey);
+}
+
+.roxli-popup-header h2 {
+    font-size: 1.25rem;
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.popup-subtitle-roxli {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+.roxli-accounts-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.roxli-account-item {
+    position: relative;
+    border-bottom: 1px solid var(--border-grey);
+    transition: var(--transition);
+}
+
+.roxli-account-item:hover {
+    background: var(--bg-grey);
+}
+
+.roxli-account-info {
+    flex: 1;
+}
+
+.roxli-account-name {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 0.125rem;
+}
+
+.roxli-account-email {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.roxli-remove-account {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.25rem;
+    cursor: pointer;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: var(--transition);
+}
+
+.roxli-account-item:hover .roxli-remove-account {
+    opacity: 1;
+}
+
+.roxli-remove-account:hover {
+    background: var(--border-grey);
+}
+
+.roxli-popup-actions {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border-grey);
+}
+
+.roxli-add-account {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-grey);
+    border-radius: var(--radius);
+    background: var(--bg-white);
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 0.875rem;
+    color: var(--text-primary);
+}
+
+.roxli-add-account:hover {
+    background: var(--bg-grey);
+    box-shadow: var(--shadow-1);
+}
+
+.roxli-popup-login {
+    padding: 1.5rem;
+}
+
+.roxli-popup-form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5rem;
+}
+
+.roxli-popup-footer {
+    padding: 1rem 1.5rem;
+    background: var(--bg-grey);
+    text-align: center;
+}
+
+/* Google Popup Styles */
+.popup-body-google {
+    background: var(--bg-white);
+    margin: 0;
+    padding: 1rem;
+    font-family: 'Google Sans', 'Roboto', sans-serif;
+}
+
+.google-popup-container {
+    max-width: 400px;
+    margin: 0 auto;
+    background: var(--bg-white);
+    border: 1px solid var(--border-grey);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-3);
+    overflow: hidden;
+}
+
+.google-popup-header {
+    text-align: center;
+    padding: 2rem 1.5rem 1rem;
+    border-bottom: 1px solid var(--border-grey);
+}
+
+.google-popup-header h2 {
+    font-size: 1.25rem;
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.popup-subtitle-google {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+.google-accounts-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.google-account-item {
+    position: relative;
+    border-bottom: 1px solid var(--border-grey);
+    transition: var(--transition);
+}
+
+.google-account-item:hover {
+    background: var(--bg-grey);
+}
+
+.account-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+}
+
+.roxli-account-avatar {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.google-account-info {
+    flex: 1;
+}
+
+.google-account-name {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 0.125rem;
+}
+
+.google-account-email {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.google-remove-account {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.25rem;
+    cursor: pointer;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: var(--transition);
+}
+
+.google-account-item:hover .google-remove-account {
+    opacity: 1;
+}
+
+.google-remove-account:hover {
+    background: var(--border-grey);
+}
+
+.google-popup-actions {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border-grey);
+}
+
+.google-add-account {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-grey);
+    border-radius: var(--radius);
+    background: var(--bg-white);
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 0.875rem;
+    color: var(--text-primary);
+}
+
+.google-add-account:hover {
+    background: var(--bg-grey);
+    box-shadow: var(--shadow-1);
+}
+
+.add-account-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background: var(--bg-grey);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+}
+
+.google-popup-login {
+    padding: 1.5rem;
+}
+
+.login-back {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-grey);
+}
+
+.back-button {
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    cursor: pointer;
+    color: var(--text-secondary);
+    padding: 0.25rem;
+    border-radius: var(--radius);
+}
+
+.back-button:hover {
+    background: var(--bg-grey);
+}
+
+.login-back h3 {
+    font-size: 1.125rem;
+    font-weight: 400;
+    color: var(--text-primary);
+}
+
+.google-popup-form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5rem;
+}
+
+.google-popup-footer {
+    padding: 1rem 1.5rem;
+    background: var(--bg-grey);
+    text-align: center;
+}
+
+.footer-links-small {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.footer-links-small a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.75rem;
+}
+
+.footer-links-small a:hover {
+    text-decoration: underline;
+}
+
+/* Container and Layout */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid var(--border-grey);
+    background: var(--bg-white);
+    margin-bottom: 2rem;
+}
+
+.header h1 {
+    font-size: 1.875rem;
+    font-weight: 400;
+    color: var(--text-primary);
+}
+
+/* Dark theme support */
+[data-theme="dark"] {
+    --bg-white: #1a1a1a;
+    --bg-grey: #2d2d2d;
+    --text-primary: #ffffff;
+    --text-secondary: #b3b3b3;
+    --border-grey: #404040;
+    --border-focus: #667eea;
+}
+
+[data-theme="dark"] body {
+    background: var(--bg-white);
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .roxli-auth-container {
+    background: var(--bg-white);
+}
+
+[data-theme="dark"] .roxli-auth-card {
+    background: var(--bg-grey);
+    border-color: var(--border-grey);
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .roxli-input-wrapper {
+    background: var(--bg-grey);
+    border-color: var(--border-grey);
+}
+
+[data-theme="dark"] .roxli-input {
+    background: var(--bg-grey);
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .roxli-label {
+    background: var(--bg-grey);
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .roxli-domain {
+    background: var(--bg-white);
+    color: var(--text-secondary);
+    border-color: var(--border-grey);
+}
+
+[data-theme="dark"] .error-message {
+    background: rgba(245, 101, 101, 0.2);
+    border-color: rgba(245, 101, 101, 0.3);
+    color: #ff6b6b;
+}
+
+[data-theme="dark"] .roxli-popup-container {
+    background: var(--bg-grey);
+    border-color: var(--border-grey);
+}
+
+[data-theme="dark"] .roxli-popup-header {
+    background: var(--bg-white);
+    border-color: var(--border-grey);
+}
+
+[data-theme="dark"] .roxli-popup-footer {
+    background: var(--bg-white);
+}
+
+[data-theme="dark"] .roxli-account-item {
+    border-color: var(--border-grey);
+}
+
+[data-theme="dark"] .roxli-account-item:hover {
+    background: var(--bg-white);
+}
+
+[data-theme="dark"] .container {
+    background: var(--bg-white);
+}
+
+[data-theme="dark"] .header {
+    background: var(--bg-white);
+    border-color: var(--border-grey);
+}
+
+[data-theme="dark"] .profile-menu {
+    background: var(--bg-grey);
+    border-color: var(--border-grey);
+}
+
+[data-theme="dark"] .profile-header {
+    background: var(--bg-white);
+}
+
+[data-theme="dark"] .menu-item:hover {
+    background: var(--bg-white);
+}
+
+[data-theme="dark"] .feature-card {
+    background: var(--bg-grey);
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .step-card {
+    background: var(--bg-grey);
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .code-block {
+    background: var(--bg-white);
+    border-color: var(--border-grey);
+}
+
+[data-theme="dark"] .code-header {
+    background: var(--bg-grey);
+    border-color: var(--border-grey);
+}
+
+[data-theme="dark"] .code-block pre {
+    background: var(--bg-white);
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .demo-container {
+    background: var(--bg-grey);
+}
+
+[data-theme="dark"] .feature-item {
+    background: var(--bg-grey);
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .tab-btn {
+    background: var(--bg-grey);
+    color: var(--text-primary);
+    border-color: var(--border-grey);
+}
+
+[data-theme="dark"] .tab-btn.active {
+    background: var(--border-focus);
+    color: white;
+}
+
+[data-theme="dark"] .guide-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+/* Profile Menu */
+.user-info {
+    position: relative;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--radius);
+    transition: var(--transition);
+}
+
+.user-profile:hover {
+    background: var(--bg-tertiary);
+}
+
+.avatar {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--border-grey);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.dropdown-arrow {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    transition: var(--transition);
+}
+
+.profile-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: var(--bg-primary);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-xl);
+    min-width: 280px;
+    z-index: 1000;
+    display: none;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    margin-top: 0.5rem;
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem;
+    background: var(--bg-secondary);
+}
+
+.menu-avatar {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.profile-name {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 1rem;
+}
+
+.profile-email {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}
+
+.menu-divider {
+    height: 1px;
+    background: var(--border);
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    padding: 0.75rem 1.25rem;
+    border: none;
+    background: none;
+    text-align: left;
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 0.875rem;
+    color: var(--text-primary);
+}
+
+.menu-item:hover {
+    background: var(--bg-secondary);
+}
+
+.menu-item.logout {
+    color: var(--error);
+}
+
+.menu-item.logout:hover {
+    background: rgba(245, 101, 101, 0.1);
+}
+
+.menu-icon {
+    font-size: 1rem;
+    width: 1.25rem;
+    text-align: center;
+}
+
+/* Saved Accounts in Profile Menu */
+.saved-accounts-section {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.account-switch-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 12px 20px;
+    border: none;
+    background: none;
+    text-align: left;
+    cursor: pointer;
+    transition: var(--transition);
+    color: var(--text-primary);
+}
+
+.account-switch-item:hover {
+    background: var(--bg-grey);
+}
+
+.switch-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.switch-info {
+    flex: 1;
+    text-align: left;
+}
+
+.switch-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+}
+
+.switch-email {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+/* Multi-Account Management */
+.multi-account-notice {
+    background: rgba(102, 126, 234, 0.1);
+    border: 1px solid rgba(102, 126, 234, 0.2);
+    border-radius: var(--radius);
+    padding: 0.75rem;
+    margin: 1rem 0;
+    font-size: 0.875rem;
+    color: var(--text-primary);
+    text-align: center;
+    animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.header-logo-img {
+    height: 2.5rem;
+    width: auto;
+    max-width: 120px;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+}
+
+.popup-logo-img {
+    height: 2rem;
+    width: auto;
+    max-width: 100px;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+}
+
+.roxli-logo-fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 600;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.btn-logo {
+    height: 16px;
+    width: auto;
+    max-width: 40px;
+    border-radius: 3px;
+    margin-right: 8px;
+    object-fit: contain;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.roxli-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+}
+
+.roxli-logo-small {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+/* Buttons */
+.btn-primary, .btn-secondary, .btn-roxli {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary {
+    background: var(--gradient);
+    color: white;
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-secondary {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+    background: var(--bg-secondary);
+    border-color: var(--primary);
+}
+
+.btn-roxli {
+    background: var(--gradient);
+    color: white;
+    font-weight: 700;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+}
+
+.btn-roxli:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Auth Container */
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 1rem;
+}
+
+.auth-card {
+    background: var(--bg-primary);
+    padding: 2.5rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-xl);
+    width: 100%;
+    max-width: 400px;
+    border: 1px solid var(--border-light);
+}
+
+.auth-card.enhanced {
+    position: relative;
+    overflow: hidden;
+}
+
+.auth-card.enhanced::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gradient);
+}
+
+/* Logo Section */
+.logo-section {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.logo {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    animation: bounce 2s infinite;
+}
+
+.auth-header h2 {
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}
+
+/* Form Styles */
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-row {
+    display: flex;
+    gap: 1rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+/* Enhanced Input Styles */
+.input-wrapper, .email-input.enhanced, .password-input {
+    display: flex;
+    align-items: center;
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    transition: var(--transition);
+    background: var(--bg-primary);
+}
+
+.input-wrapper:focus-within, .email-input.enhanced:focus-within, .password-input:focus-within {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.input-icon, .email-prefix, .password-icon {
+    padding: 0.75rem;
+    color: var(--text-muted);
+    font-size: 1rem;
+    background: var(--bg-secondary);
+}
+
+.input-wrapper input, .email-input.enhanced input, .password-input input {
+    border: none;
+    flex: 1;
+    padding: 0.75rem;
+    background: transparent;
+    color: var(--text-primary);
+    font-size: 0.875rem;
+}
+
+.input-wrapper input::placeholder, .email-input.enhanced input::placeholder, .password-input input::placeholder {
+    color: var(--text-muted);
+}
+
+.email-domain {
+    background: var(--bg-secondary);
+    padding: 0.75rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+.toggle-password {
+    background: none;
+    border: none;
+    padding: 0.75rem;
+    cursor: pointer;
+    font-size: 1rem;
+    color: var(--text-muted);
+}
+
+/* Password Strength */
+.password-strength {
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-weight: 600;
+}
+
+.password-strength.weak { background: #fed7d7; color: #c53030; }
+.password-strength.fair { background: #feebc8; color: #dd6b20; }
+.password-strength.good { background: #c6f6d5; color: #38a169; }
+.password-strength.strong { background: #c6f6d5; color: #2f855a; }
+
+/* Enhanced Button Styles */
+.btn-primary.enhanced {
+    background: var(--gradient);
+    border: none;
+    padding: 1rem 1.5rem;
+    border-radius: var(--radius);
+    font-weight: 700;
+    font-size: 1rem;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary.enhanced:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.btn-primary.enhanced:disabled {
+    opacity: 0.7;
+    transform: none;
+    cursor: not-allowed;
+}
+
+/* Avatar Section */
+.avatar-section.enhanced {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    border: 2px dashed var(--border);
+    transition: var(--transition);
+}
+
+.avatar-section.enhanced:hover {
+    border-color: var(--primary);
+    background: rgba(102, 126, 234, 0.05);
+}
+
+.avatar-preview {
+    position: relative;
+    width: 5rem;
+    height: 5rem;
+    border-radius: 50%;
+    background: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 700;
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+    cursor: pointer;
+    transition: var(--transition);
+    border: 3px solid var(--bg-primary);
+    box-shadow: var(--shadow-md);
+}
+
+.avatar-preview:hover {
+    transform: scale(1.05);
+}
+
+.avatar-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: var(--transition);
+}
+
+.avatar-preview:hover .avatar-overlay {
+    opacity: 1;
+}
+
+.camera-icon {
+    font-size: 1.25rem;
+}
+
+.avatar-options {
+    flex: 1;
+}
+
+.avatar-help {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+}
+
+.btn-avatar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border);
+    background: var(--bg-primary);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 0.875rem;
+    color: var(--text-primary);
+}
+
+.btn-avatar:hover {
+    border-color: var(--primary);
+    background: rgba(102, 126, 234, 0.05);
+}
+
+/* Popup Styles */
+.popup-body {
+    background: var(--bg-secondary);
+    margin: 0;
+    padding: 1rem;
+}
+
+.popup-container {
+    max-width: 360px;
+    margin: 0 auto;
+    background: var(--bg-primary);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-xl);
+    overflow: hidden;
+}
+
+.popup-container.enhanced {
+    position: relative;
+}
+
+.popup-container.enhanced::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gradient);
+}
+
+.popup-header {
+    text-align: center;
+    padding: 2rem 1.5rem 1.5rem;
+    background: var(--bg-secondary);
+}
+
+.popup-logo {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+}
+
+.popup-subtitle {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}
+
+.accounts-list {
+    padding: 1rem;
+}
+
+.account-item.enhanced {
+    background: var(--bg-primary);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    transition: var(--transition);
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.account-item.enhanced:hover {
+    border-color: var(--primary);
+    background: rgba(102, 126, 234, 0.02);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.account-avatar {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.account-info {
+    flex: 1;
+}
+
+.account-name {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.account-email {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}
+
+.btn-continue {
+    background: var(--gradient);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius);
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 0.875rem;
+}
+
+.btn-continue:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-remove {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: var(--error);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 1.5rem;
+    height: 1.5rem;
+    font-size: 0.75rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+}
+
+.btn-remove:hover {
+    background: #e53e3e;
+    transform: scale(1.1);
+}
+
+/* Feature Cards */
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.feature-card {
+    background: var(--bg-primary);
+    padding: 2rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    text-align: center;
+    transition: var(--transition);
+    border: 2px solid transparent;
+}
+
+.feature-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--primary);
+    box-shadow: var(--shadow-lg);
+}
+
+.feature-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.feature-card h4 {
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+}
+
+.feature-card p {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}
+
+/* Error Messages */
+.error-message {
+    color: var(--error);
+    background: rgba(245, 101, 101, 0.1);
+    padding: 0.75rem;
+    border-radius: var(--radius);
+    margin-top: 1rem;
+    display: none;
+    font-size: 0.875rem;
+    border: 1px solid rgba(245, 101, 101, 0.2);
+}
+
+.error-message:not(:empty) {
+    display: block;
+}
+
+/* Animations */
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-10px); }
+    60% { transform: translateY(-5px); }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+.shake {
+    animation: shake 0.5s ease-in-out;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 0.75rem;
+    }
+    
+    .header {
+        padding: 1rem 0;
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+    
+    .auth-card {
+        padding: 2rem 1.5rem;
+        margin: 0.5rem;
+    }
+    
+    .form-row {
+        flex-direction: column;
+    }
+    
+    .avatar-section.enhanced {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+    
+    .roxli-auth-container {
+        padding: 0.5rem;
+        min-height: 100vh;
+    }
+    
+    .roxli-auth-card {
+        padding: 1.5rem 1rem;
+        margin: 0;
+        max-width: 100%;
+        border-radius: var(--radius);
+    }
+    
+    .roxli-header h1 {
+        font-size: 1.25rem;
+    }
+    
+    .roxli-input-wrapper {
+        padding: 0.75rem;
+    }
+    
+    .roxli-input {
+        font-size: 16px;
+    }
+    
+    .roxli-domain {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.875rem;
+    }
+    
+    .profile-menu {
+        min-width: 260px;
+        right: -1rem;
+    }
+    
+    .popup-container {
+        margin: 0.5rem;
+        max-width: calc(100vw - 1rem);
+    }
+    
+    .features-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .feature-card {
+        padding: 1.5rem;
+    }
+    
+    .roxli-auth-container {
+        padding: 1rem 0.5rem;
+    }
+    
+    .avatar-section-roxli {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+        padding: 0.75rem;
+    }
+    
+    .avatar-preview-roxli {
+        width: 3.5rem;
+        height: 3.5rem;
+        font-size: 1rem;
+    }
+    
+    .roxli-header {
+        margin-bottom: 1rem;
+    }
+    
+    .roxli-header h1 {
+        font-size: 1.125rem;
+        margin-bottom: 0.25rem;
+    }
+    
+    .roxli-subtitle {
+        font-size: 0.875rem;
+    }
+    
+    .roxli-form {
+        gap: 1rem;
+    }
+    
+    .avatar-section-roxli {
+        margin: 0.75rem 0;
+        padding: 0.75rem;
+    }
+    
+    .avatar-info {
+        text-align: left;
+    }
+    
+    .avatar-title {
+        font-size: 0.8rem;
+        margin-bottom: 0.125rem;
+    }
+    
+    .avatar-subtitle {
+        font-size: 0.7rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .roxli-actions {
+        margin-top: 1rem;
+    }
+    
+    .roxli-footer {
+        flex-direction: column;
+        gap: 0.75rem;
+        text-align: center;
+        padding: 0.75rem;
+        margin-top: 1rem;
+    }
+    
+    .footer-links {
+        justify-content: center;
+        gap: 1rem;
+    }
+    
+    .footer-links a {
+        font-size: 0.7rem;
+    }
+    
+    .language-select {
+        font-size: 0.7rem;
+    }
+    
+    .multi-account-notice {
+        position: fixed !important;
+        top: 10px !important;
+        left: 10px !important;
+        right: 10px !important;
+        max-width: none !important;
+        margin: 0 !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .auth-card {
+        padding: 1rem 0.75rem;
+    }
+    
+    .roxli-auth-card {
+        padding: 1.25rem 1rem;
+        margin: 0.25rem;
+        min-height: auto;
+    }
+    
+    .roxli-auth-container {
+        padding: 0.5rem 0.25rem;
+        min-height: 100vh;
+        justify-content: flex-start;
+    }
+    
+    .logo {
+        font-size: 2rem;
+    }
+    
+    .header-logo-img {
+        height: 2rem;
+        max-width: 100px;
+    }
+    
+    .auth-header h2 {
+        font-size: 1.125rem;
+    }
+    
+    .roxli-header h1 {
+        font-size: 1rem;
+        margin-bottom: 0.25rem;
+    }
+    
+    .roxli-subtitle {
+        font-size: 0.8rem;
+    }
+    
+    .btn-primary.enhanced, .btn-roxli {
+        padding: 0.75rem 1rem;
+        font-size: 0.8rem;
+    }
+    
+    .roxli-btn-primary {
+        padding: 0.75rem 1rem;
+        font-size: 0.8rem;
+    }
+    
+    .avatar-preview {
+        width: 3rem;
+        height: 3rem;
+        font-size: 1rem;
+    }
+    
+    .avatar-preview-roxli {
+        width: 3rem;
+        height: 3rem;
+        font-size: 0.9rem;
+    }
+    
+    .roxli-popup-container {
+        margin: 0.25rem;
+        max-width: calc(100vw - 0.5rem);
+    }
+    
+    .roxli-popup-header {
+        padding: 1rem 0.75rem 0.75rem;
+    }
+    
+    .roxli-popup-login {
+        padding: 0.75rem;
+    }
+    
+    .roxli-row {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    
+    .avatar-section-roxli {
+        flex-direction: row;
+        text-align: left;
+        gap: 0.75rem;
+        padding: 0.5rem;
+        margin: 0.5rem 0;
+    }
+    
+    .roxli-input-group {
+        margin-bottom: 0.75rem;
+    }
+    
+    .roxli-form {
+        gap: 0.75rem;
+    }
+    
+    .password-help {
+        font-size: 0.75rem;
+        margin-top: 0.25rem;
+    }
+    
+    .error-message {
+        font-size: 0.75rem;
+        padding: 0.5rem;
+        margin-top: 0.75rem;
+    }
+    
+    /* Popup Mobile Responsive */
+    .roxli-popup-container {
+        margin: 0.25rem;
+        max-width: calc(100vw - 0.5rem);
+        max-height: calc(100vh - 0.5rem);
+        overflow-y: auto;
+    }
+    
+    .roxli-popup-header {
+        padding: 1rem 0.75rem 0.75rem;
+    }
+    
+    .roxli-popup-header h2 {
+        font-size: 1.125rem;
+    }
+    
+    .popup-subtitle-roxli {
+        font-size: 0.8rem;
+    }
+    
+    .roxli-popup-login {
+        padding: 0.75rem;
+    }
+    
+    .roxli-accounts-list {
+        max-height: none;
+    }
+    
+    .roxli-account-item {
+        padding: 0.75rem;
+        min-height: 70px;
+    }
+    
+    .roxli-account-avatar {
+        width: 2.5rem;
+        height: 2.5rem;
+    }
+    
+    .roxli-account-name {
+        font-size: 0.8rem;
+    }
+    
+    .roxli-account-email {
+        font-size: 0.7rem;
+    }
+    
+    .roxli-add-account {
+        padding: 0.5rem;
+        font-size: 0.8rem;
+    }
+    
+    .add-account-icon {
+        width: 2rem;
+        height: 2rem;
+        font-size: 1rem;
+    }
+    
+    .popup-logo-img {
+        height: 1.75rem;
+        max-width: 80px;
+    }
+}

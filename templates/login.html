@@ -1,0 +1,198 @@
+{% extends "base.html" %}
+
+{% block title %}Sign in - Roxli{% endblock %}
+
+{% block content %}
+<div class="roxli-auth-container">
+    <div class="roxli-auth-card">
+        <div class="roxli-header">
+            <div class="roxli-logo">
+                <img src="{{ url_for('static', filename='images/logo1.png') }}" alt="Roxli" class="header-logo-img" onload="this.style.display='block'" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                <div class="roxli-logo-fallback" style="display: none;">
+                    <span class="logo-r">R</span>
+                    <span class="logo-o">o</span>
+                    <span class="logo-x">x</span>
+                    <span class="logo-l">l</span>
+                    <span class="logo-i">i</span>
+                </div>
+            </div>
+            <h1>Sign in</h1>
+            <p class="roxli-subtitle">to continue to Roxli</p>
+        </div>
+        
+        <form id="loginForm" class="roxli-form">
+            <div class="roxli-input-group">
+                <div class="roxli-input-wrapper">
+                    <input type="text" id="emailPrefix" required class="roxli-input" oninput="this.value = this.value.toLowerCase()">
+                    <label class="roxli-label">Email</label>
+                    <span class="roxli-domain">@roxli.in</span>
+                </div>
+            </div>
+            
+            <div class="roxli-input-group">
+                <div class="roxli-input-wrapper">
+                    <input type="password" id="password" required class="roxli-input">
+                    <label class="roxli-label">Password</label>
+                    <button type="button" class="password-toggle" onclick="togglePassword()">
+                        <span id="toggleIcon">👁️</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="roxli-actions">
+                <a href="/register" class="roxli-link">Create account</a>
+                <button type="submit" class="roxli-btn-primary">
+                    <span class="btn-text">Next</span>
+                    <div class="btn-spinner" style="display: none;"></div>
+                </button>
+            </div>
+        </form>
+        
+        <div class="roxli-divider">
+            <span>or</span>
+        </div>
+        
+        <button onclick="openPopup()" class="roxli-btn-secondary">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Roxli" class="btn-logo" onerror="this.style.display='none'">
+            Quick Sign In
+        </button>
+        
+        <div class="error-message" id="errorMessage"></div>
+    </div>
+    
+    <div class="roxli-footer">
+        <select class="language-select">
+            <option>English (United States)</option>
+        </select>
+        <div class="footer-links">
+            <a href="#">Help</a>
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
+        </div>
+    </div>
+</div>
+
+<script>
+let isLoading = false;
+
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    if (isLoading) return;
+    
+    const emailPrefix = document.getElementById('emailPrefix').value;
+    const password = document.getElementById('password').value;
+    const email = `${emailPrefix}@roxli.in`;
+    
+    setLoading(true);
+    
+    try {
+        const response = await fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            showSuccess();
+            setTimeout(() => {
+                const redirectUrl = '{{ redirect_url }}' || '/';
+                if (redirectUrl && redirectUrl !== 'None') {
+                    window.location.href = redirectUrl;
+                } else {
+                    window.location.href = '/';
+                }
+            }, 800);
+        } else {
+            showError(data.error);
+        }
+    } catch (error) {
+        showError('Sign in failed. Please try again.');
+    } finally {
+        setLoading(false);
+    }
+});
+
+function setLoading(loading) {
+    isLoading = loading;
+    const btnText = document.querySelector('.btn-text');
+    const btnSpinner = document.querySelector('.btn-spinner');
+    const submitBtn = document.querySelector('button[type="submit"]');
+    
+    if (loading) {
+        btnText.style.display = 'none';
+        btnSpinner.style.display = 'block';
+        submitBtn.disabled = true;
+    } else {
+        btnText.style.display = 'block';
+        btnSpinner.style.display = 'none';
+        submitBtn.disabled = false;
+    }
+}
+
+function showError(message) {
+    const errorDiv = document.getElementById('errorMessage');
+    errorDiv.textContent = message;
+    errorDiv.style.display = 'block';
+    errorDiv.classList.add('shake');
+    
+    setTimeout(() => {
+        errorDiv.classList.remove('shake');
+    }, 500);
+}
+
+function showSuccess() {
+    const submitBtn = document.querySelector('button[type="submit"]');
+    submitBtn.innerHTML = '<span>✓ Success</span>';
+    submitBtn.style.background = '#34a853';
+}
+
+function togglePassword() {
+    const passwordInput = document.getElementById('password');
+    const toggleIcon = document.getElementById('toggleIcon');
+    
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleIcon.textContent = '🙈';
+    } else {
+        passwordInput.type = 'password';
+        toggleIcon.textContent = '👁️';
+    }
+}
+
+function openPopup() {
+    const popup = window.open('/popup', 'roxli-auth', 'width=400,height=600,scrollbars=yes,resizable=yes');
+    
+    window.addEventListener('message', function(event) {
+        if (event.origin !== window.location.origin) return;
+        
+        if (event.data.type === 'ROXLI_AUTH_SUCCESS') {
+            popup.close();
+            const redirectUrl = '{{ redirect_url }}' || '/';
+            if (redirectUrl && redirectUrl !== 'None') {
+                window.location.href = redirectUrl;
+            } else {
+                window.location.href = '/';
+            }
+        }
+    });
+}
+
+// Auto-focus email input and handle URL parameters
+document.addEventListener('DOMContentLoaded', function() {
+    // Check for email parameter in URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const emailParam = urlParams.get('email');
+    
+    if (emailParam && emailParam.endsWith('@roxli.in')) {
+        const emailPrefix = emailParam.replace('@roxli.in', '');
+        document.getElementById('emailPrefix').value = emailPrefix;
+        document.getElementById('password').focus();
+    } else {
+        document.getElementById('emailPrefix').focus();
+    }
+});
+</script>
+{% endblock %}

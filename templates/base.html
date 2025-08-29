@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Roxli Authentication{% endblock %}</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logo.png') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/logo.png') }}">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='images/logo.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .welcome-card {
+            max-width: 450px;
+            margin: 60px auto;
+            padding: 48px 40px 36px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .roxli-logo {
+            margin-bottom: 16px;
+        }
+        
+        .welcome-card h2 {
+            font-size: 24px;
+            font-weight: 400;
+            margin-bottom: 8px;
+            color: #202124;
+        }
+        
+        .welcome-card p {
+            font-size: 16px;
+            color: #5f6368;
+            margin-bottom: 32px;
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 32px;
+        }
+        
+        .btn-primary {
+            background: #1a73e8;
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-primary:hover {
+            background: #1669c1;
+        }
+        
+        .btn-secondary {
+            background: none;
+            color: #1a73e8;
+            border: 1px solid #dadce0;
+            padding: 10px 24px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-secondary:hover {
+            background: #f8f9fa;
+        }
+        
+        .help-links a {
+            color: #1a73e8;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .help-links a:hover {
+            text-decoration: underline;
+        }
+        
+        body {
+            background: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        @media (max-width: 600px) {
+            .welcome-card {
+                margin: 20px;
+                padding: 32px 24px;
+            }
+            
+            .auth-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    {% block content %}{% endblock %}
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>
+        // Auto detect system theme
+        function setTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            const theme = savedTheme || systemTheme;
+            document.documentElement.setAttribute('data-theme', theme);
+        }
+        
+        // Set theme on load
+        setTheme();
+        
+        // Listen for system theme changes
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', setTheme);
+    </script>
+</body>
+</html>
