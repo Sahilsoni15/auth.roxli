@@ -34,15 +34,16 @@
         }
         
         .roxli-accounts-list {
-            max-height: 280px;
+            max-height: 260px;
             overflow-y: auto;
-            border-radius: 12px;
-            background: #fff;
+            border-radius: 8px;
+            background: var(--popup-bg, #fff);
             margin: 8px 0;
+            border: 1px solid var(--popup-border, #e8eaed);
         }
         
         .roxli-accounts-list::-webkit-scrollbar {
-            width: 4px;
+            width: 3px;
         }
         
         .roxli-accounts-list::-webkit-scrollbar-track {
@@ -50,23 +51,24 @@
         }
         
         .roxli-accounts-list::-webkit-scrollbar-thumb {
-            background: #dadce0;
+            background: var(--scrollbar-thumb, #dadce0);
             border-radius: 2px;
         }
         
         .roxli-account-item {
             display: flex;
             align-items: center;
-            padding: 12px 16px;
-            border-bottom: 1px solid #f1f3f4;
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--item-border, #f1f3f4);
             transition: all 0.15s ease;
             cursor: pointer;
-            min-height: 64px;
+            min-height: 56px;
+            background: var(--item-bg, transparent);
         }
         
         .roxli-account-item:hover {
-            background: #f8f9fa;
-            transform: translateX(2px);
+            background: var(--item-hover-bg, #f8f9fa);
+            transform: translateX(1px);
         }
         
         .roxli-account-item:last-child {
@@ -81,11 +83,11 @@
         }
         
         .roxli-account-avatar {
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             object-fit: cover;
-            margin-right: 12px;
+            margin-right: 10px;
             flex-shrink: 0;
         }
         
@@ -96,8 +98,8 @@
         
         .roxli-account-name {
             font-weight: 500;
-            font-size: 14px;
-            color: #202124;
+            font-size: 13px;
+            color: var(--text-primary, #202124);
             margin-bottom: 2px;
             white-space: nowrap;
             overflow: hidden;
@@ -105,8 +107,8 @@
         }
         
         .roxli-account-email {
-            font-size: 12px;
-            color: #5f6368;
+            font-size: 11px;
+            color: var(--text-secondary, #5f6368);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -115,13 +117,13 @@
         .roxli-remove-account {
             background: none;
             border: none;
-            color: #9aa0a6;
-            font-size: 16px;
+            color: var(--remove-btn, #9aa0a6);
+            font-size: 14px;
             cursor: pointer;
-            padding: 4px;
+            padding: 3px;
             border-radius: 50%;
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -135,8 +137,40 @@
         }
         
         .roxli-remove-account:hover {
-            background-color: #fce8e6;
-            color: #ea4335;
+            background-color: var(--remove-hover-bg, #fce8e6);
+            color: var(--remove-hover-color, #ea4335);
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --popup-bg: #2d2e30;
+                --popup-border: #3c4043;
+                --item-border: #3c4043;
+                --item-bg: transparent;
+                --item-hover-bg: #3c4043;
+                --text-primary: #e8eaed;
+                --text-secondary: #9aa0a6;
+                --remove-btn: #9aa0a6;
+                --remove-hover-bg: #5f2120;
+                --remove-hover-color: #f28b82;
+                --scrollbar-thumb: #5f6368;
+            }
+        }
+        
+        @media (prefers-color-scheme: light) {
+            :root {
+                --popup-bg: #fff;
+                --popup-border: #e8eaed;
+                --item-border: #f1f3f4;
+                --item-bg: transparent;
+                --item-hover-bg: #f8f9fa;
+                --text-primary: #202124;
+                --text-secondary: #5f6368;
+                --remove-btn: #9aa0a6;
+                --remove-hover-bg: #fce8e6;
+                --remove-hover-color: #ea4335;
+                --scrollbar-thumb: #dadce0;
+            }
         }
     </style>
 </head>
@@ -301,7 +335,7 @@
                 accountsList.style.maxHeight = 'none';
                 accountsList.style.overflowY = 'visible';
             } else {
-                accountsList.style.maxHeight = '280px';
+                accountsList.style.maxHeight = '260px';
                 accountsList.style.overflowY = 'auto';
             }
             
