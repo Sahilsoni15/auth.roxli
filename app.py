@@ -299,7 +299,7 @@ def register():
     else:
         # Use ui-avatars.com for consistent avatar generation
         avatar_name = f"{first_name}+{last_name}"
-        avatar = f"https://ui-avatars.com/api/?name={avatar_name}&background=667eea&color=fff&size=200&bold=true"
+        avatar = f"https://ui-avatars.com/api/?name={avatar_name}&background=667eea&color=fff&size=200&bold=true&rounded=true"
     
     # Hash password
     password_hash = hashlib.sha256(password.encode()).hexdigest()
@@ -537,7 +537,7 @@ def refresh_avatar():
     if user_data:
         # Regenerate avatar using ui-avatars.com with consistent styling
         avatar_name = f"{user_data['firstName']}+{user_data['lastName']}"
-        new_avatar = f"https://ui-avatars.com/api/?name={avatar_name}&background=667eea&color=fff&size=200&bold=true"
+        new_avatar = f"https://ui-avatars.com/api/?name={avatar_name}&background=667eea&color=fff&size=200&bold=true&rounded=true"
         user_ref.update({'avatar': new_avatar})
         return jsonify({'success': True, 'avatar': new_avatar})
     
@@ -643,6 +643,27 @@ def switch_account():
     })
     response.set_cookie('roxli_token', token, httponly=False, secure=False, samesite='Lax', path='/')
     return response
+
+@app.route('/api/sync-avatar', methods=['POST'])
+def sync_avatar():
+    """Endpoint for syncing avatar updates across services"""
+    data = request.json
+    user_id = data.get('user_id')
+    avatar_url = data.get('avatar')
+    email = data.get('email')
+    
+    if not user_id or not avatar_url:
+        return jsonify({'error': 'User ID and avatar URL required'}), 400
+    
+    try:
+        # Update user avatar in auth database
+        user_ref = db.reference(f'users/{user_id}')
+        user_ref.update({'avatar': avatar_url})
+        
+        return jsonify({'success': True, 'message': 'Avatar synced successfully'})
+    except Exception as e:
+        print(f"Error syncing avatar in auth service: {e}")
+        return jsonify({'error': 'Failed to sync avatar'}), 500
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
