@@ -392,7 +392,7 @@
                     }
                     
                     // Send message to all possible origins
-                    const origins = ['https://auth.roxli.in', 'https://account.roxli.in', 'https://mail.roxli.in'];
+                    const origins = ['https://auth.roxli.in', 'https://account.roxli.in', 'https://mail.roxli.in', 'https://search.roxli.in'];
                     origins.forEach(origin => {
                         try {
                             window.opener.postMessage({ type: 'ROXLI_AUTH_SUCCESS', user: data.user, token: data.token }, origin);
@@ -500,7 +500,7 @@
                     localStorage.setItem('roxli_accounts', JSON.stringify(savedAccounts));
                     
                     // Send message to all possible origins
-                    const origins = ['https://auth.roxli.in', 'https://account.roxli.in', 'https://mail.roxli.in'];
+                    const origins = ['https://auth.roxli.in', 'https://account.roxli.in', 'https://mail.roxli.in', 'https://search.roxli.in'];
                     origins.forEach(origin => {
                         try {
                             window.opener.postMessage({ type: 'ROXLI_AUTH_SUCCESS', user: data.user, token: data.token }, origin);
@@ -549,7 +549,7 @@
                     localStorage.setItem('roxli_accounts', JSON.stringify(savedAccounts));
                     
                     // Send message to all possible origins
-                    const origins = ['https://auth.roxli.in', 'https://account.roxli.in', 'https://mail.roxli.in'];
+                    const origins = ['https://auth.roxli.in', 'https://account.roxli.in', 'https://mail.roxli.in', 'https://search.roxli.in'];
                     origins.forEach(origin => {
                         try {
                             window.opener.postMessage({ type: 'ROXLI_AUTH_SUCCESS', user: data.user, token: data.token }, origin);
