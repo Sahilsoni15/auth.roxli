@@ -20,7 +20,7 @@ import uuid
 
 app = Flask(__name__)
 app.secret_key = sec.token_hex(32)
-CORS(app, supports_credentials=True, origins=['https://auth.roxli.in', 'https://account.roxli.in', 'https://mail.roxli.in'])
+CORS(app, supports_credentials=True, origins=['https://auth.roxli.in', 'https://account.roxli.in', 'https://mail.roxli.in', 'https://search.roxli.in'])
 
 # Security headers
 @app.after_request
@@ -29,7 +29,7 @@ def security_headers(response):
     response.headers['X-Frame-Options'] = 'DENY'
     response.headers['X-XSS-Protection'] = '1; mode=block'
     response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
-    response.headers['Content-Security-Policy'] = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://auth.roxli.in https://account.roxli.in https://mail.roxli.in"
+    response.headers['Content-Security-Policy'] = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://auth.roxli.in https://account.roxli.in https://mail.roxli.in https://search.roxli.in"
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
